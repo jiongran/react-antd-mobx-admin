@@ -1,3 +1,6 @@
+import { store } from '@/context'
+import ErrorPage from "@/pages/errorpage"
+import routers from "@/router"
 /**
  * @description 判空
  * @param obj
@@ -185,4 +188,55 @@ export const getValue: (origin: { [key: string]: any }, path: string) => any = (
     val = val[/\d+/.test(key) ? Number(key) : key]
   }
   return val
+}
+
+
+/**
+ * 获取本地存储中的权限
+ */
+ export const getPermission = () =>{
+   return store.User.UserInfo.permission || []
+ }
+
+
+/**
+* 根据权限判断是否有权限
+*/
+export const isAuthorized = (val: string): boolean => {
+//  const permissions = getPermission()
+//  return !!permissions.find((_:any) => _.code === val)
+return true
+}
+
+/**
+ * 以递归的方式展平react router数组
+ * @param {object[]} arr 路由数组
+ * @param {string} child 需要递归的字段名
+ */
+ export const flattenRoutes = (arr:any[]):any[] =>
+ arr.reduce(
+   (prev: CommonObjectType<unknown>[], item: CommonObjectType<unknown>) => {
+     if (Array.isArray(item.items)) {
+       prev.push(item)
+     }
+     return prev.concat(
+       Array.isArray(item.items) ? flattenRoutes(item.items) : item
+     )
+   },
+   []
+ )
+
+ /**
+* 根据路径获取路由的name和key
+* @param {string} path 路由
+*/
+export const getKeyName = (path: string = '/403') => {
+ const truePath = path.split('?')[0]
+ const curRoute = flattenRoutes(routers).filter(
+   (item: { path: string | string[] }) => item.path.includes(truePath)
+ )
+ if (!curRoute[0])
+   return { title: '暂无权限', tabKey: '403', component: ErrorPage }
+ const { name, key, component } = curRoute[0]
+ return { title: name, tabKey: key, component }
 }

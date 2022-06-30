@@ -1,7 +1,7 @@
 /** @format */
 
+import { createFromIconfontCN } from '@ant-design/icons'
 import * as React from 'react'
-import {createFromIconfontCN} from '@ant-design/icons'
 
 
 export interface IconProps {
@@ -13,6 +13,6 @@ export interface IconProps {
 }
 
 const Icon = createFromIconfontCN({
-    scriptUrl:require('./iconfont.js')
+    scriptUrl:require('//at.alicdn.com/t/font_1830242_6vhnrbj73u5.js')
 })
 export default Icon

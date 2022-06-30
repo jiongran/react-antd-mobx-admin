@@ -1,5 +1,5 @@
+import { action, computed, makeObservable, observable } from "mobx"
 import BaseStore from '../baseStore'
-import { makeObservable, observable, computed, action } from "mobx"
 
 export enum EenuMode {
     horizontal = 'horizontal',
@@ -35,7 +35,7 @@ export class AppStore extends BaseStore implements IAppStore {
         this.theme = theme
     }
 
-    setCollapsed (collapsed:any){
+    setCollapsed (collapsed:boolean){
         this.collapsed = collapsed
     }
     

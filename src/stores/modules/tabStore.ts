@@ -1,5 +1,5 @@
+import { action, computed, makeObservable, observable } from "mobx"
 import BaseStore from '../baseStore'
-import { makeObservable, observable, computed, action } from "mobx"
 
 export interface ITabStore {
     curTab: any[]
@@ -10,12 +10,13 @@ export interface ITabStore {
 
 export class TabStore extends BaseStore implements ITabStore {
     curTab = []
-    currentTab=''
-    reloadPath ='null'
+    currentTab = undefined
+    reloadPath = 'null'
     constructor() {
         super()
         makeObservable(this, {
             curTab: observable,
+            currentTab: observable,
             reloadPath: observable,
             setTabs: action,
             setCurrentTab: action,
@@ -50,8 +51,7 @@ export class TabStore extends BaseStore implements ITabStore {
 
     }
 
-    setTabtitle (title:string){
-        
+    setTabtitle (){
     }
 
     get selectTabs() {
