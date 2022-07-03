@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Drawer, Col, Row, message, Button, Radio } from "antd";
-import MyIcon from "@/components/icon";
 import Color from "@/components/color";
-import { getKey, setKey, rmKey } from "@/utils";
+import MyIcon from "@/components/icon";
+import { getKey, rmKey, setKey } from "@/utils";
+import { Button, Col, Drawer, message, Radio, Row } from "antd";
+import { useCallback, useEffect, useState } from "react";
 import "./index.less";
 
 const darkTheme = process.env.showColorSet
@@ -41,8 +41,8 @@ const getColor = (color) => ({
 });
 const THEMENAMEKEY = "theme-name";
 const THEMDATAKEY = "theme-data";
-const THEME_NAME = getKey(true, THEMENAMEKEY);
-const THEME = getKey(true, THEMDATAKEY);
+const THEME_NAME = getKey(false, THEMENAMEKEY);
+const THEME = getKey(false, THEMDATAKEY);
 function SetTheme() {
   const [visible, setVisible] = useState(false);
   const [selectInfo, setInfo] = useState({});

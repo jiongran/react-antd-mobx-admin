@@ -1,11 +1,13 @@
-import React, { useCallback, useState, useRef, useEffect } from "react"
-import { Form, Input, Button, message } from "antd"
-import { UserOutlined, LockOutlined, SafetyOutlined, VerifiedOutlined } from '@ant-design/icons'
-import { useDispatch } from "react-redux"
-import { saveToken} from "@/utils"
-import { setUserInfoAction } from "@/store/user/action"
 import req from '@/api/req'
-import "./index.less";
+import { setUserInfoAction } from "@/store/user/action"
+import { saveToken } from "@/utils"
+import { api, setApi, validLength6 } from '@/utils/formValid'
+import { jsonUtils } from '@/utils/modules'
+import { LockOutlined, SafetyOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
+import { Button, Form, Input, message } from "antd"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { useDispatch } from "react-redux"
+import "./index.less"
 const uuid = require('uuid')
 const IPT_RULE_USERNAME = [
     {
@@ -19,6 +21,9 @@ const IPT_RULE_PASSWORD = [
         required: true,
         message: "请输入密码",
     },
+    {
+        validator: validLength6
+    }
 ];
 
 const IPT_RULE_CODE = [
@@ -32,39 +37,41 @@ const IPT_RULE_TOTPCODE = [
     { required: true, message: '请输入谷歌验证码' }
 ]
 
-function useLogin(setUserInfo,uuid) {
+function useLogin(setUserInfo, uuid) {
     const [btnLoad, setBtnLoad] = useState(false);
-    const onFinish = async(values) => {
-        setBtnLoad(true);
+    const onFinish = async (values) => {
+        setBtnLoad(true)
         try {
             const result = await req("member/login", {
                 ...values,
                 uuid
             })
             if (result.resultCode !== 200) return
-            const { data } = result;
-            setBtnLoad(false);
-            saveToken(data.oAuth.token);
-            data.isLogin = true;
-            message.success('登录成功');
-            setUserInfo(data.user);
-        } catch(e) {
+            const { data } = result
+            setBtnLoad(false)
+            saveToken(data.oAuth.token)
+            message.success('登录成功')
+            setUserInfo({ ...data.user, isLogin: true })
+        } catch (e) {
             setBtnLoad(false);
         }
     };
-    return { btnLoad, onFinish };
+    return { btnLoad, onFinish }
 }
 
 function Login() {
+    console.log('before',api)
+    setApi({a1:'s',a8:'18'})
+    console.log('after',jsonUtils.stringify(api))
     const dispatch = useDispatch()
     const setUserInfo = useCallback((info) => dispatch(setUserInfoAction(info)), [dispatch])
     const [form] = Form.useForm();
     const [isShowGoggleTotpCode, setIsShowGoggleTotpCode] = useState(false)
-    const [$uuid,set$uuid] = useState('')
-    const { btnLoad, onFinish } = useLogin(setUserInfo,$uuid);
+    const [$uuid, set$uuid] = useState('')
+    const { btnLoad, onFinish } = useLogin(setUserInfo, $uuid);
     const code = useRef(null)
-    const getCode = async(e) => {
-        e&&e.stopPropagation();
+    const getCode = async (e) => {
+        e && e.stopPropagation();
         const _uuid = uuid.v4().replace(/-/g, "")
         const result = await req("open/getCode", {
             uuid: _uuid
@@ -73,9 +80,9 @@ function Login() {
         code.current.src = url
         set$uuid(_uuid)
     }
-    const getIsOpenTotpCode  = async() => {
+    const getIsOpenTotpCode = async () => {
         var username = form.getFieldValue('username')
-        if(username){
+        if (username) {
             const res = await req("member/getIsOpenTotpCode", { username })
             if (res.resultCode !== 200) return
             setIsShowGoggleTotpCode(!!res.data)
@@ -97,15 +104,15 @@ function Login() {
                     <Form.Item name="username" rules={IPT_RULE_USERNAME}>
                         <Input
                             prefix={<UserOutlined />}
-                            placeholder="账号:admin/user"
-                            onBlur={()=>getIsOpenTotpCode()}
+                            placeholder="请输入帐号"
+                            onBlur={() => getIsOpenTotpCode()}
                         />
                     </Form.Item>
                     <Form.Item name="password" rules={IPT_RULE_PASSWORD}>
                         <Input
                             prefix={<LockOutlined />}
                             type="password"
-                            placeholder="密码:admin123/user123"
+                            placeholder="请输入密码"
                         />
                     </Form.Item>
                     <Form.Item name="code" rules={IPT_RULE_CODE}>

@@ -7,7 +7,7 @@ const adminClassApiBeforeStr = ''
 const keFuClassApiBeforeStr = ''
 // 三个交集
 const allRoleApiBeforeStr = ''
-const apiPermission = {
+let apiPermission = {
     commonApiBeforeStr,
     adminApiBeforeStr,
     keFuAdminApiBeforeStr,
@@ -16,3 +16,25 @@ const apiPermission = {
     allRoleApiBeforeStr,
 }
 export default apiPermission
+
+export const setUseApiAccorddingToRole = (role) => {
+	switch(role) {
+		case 'KeFu':
+			apiPermission.keFuClassApiBeforeStr = apiPermission.commonApiBeforeStr
+			apiPermission.allRoleApiBeforeStr = apiPermission.commonApiBeforeStr
+			apiPermission.adminClassApiBeforeStr = apiPermission.adminApiBeforeStr
+			break
+		case 'KeFuAdmin':
+			apiPermission.keFuClassApiBeforeStr = apiPermission.keFuAdminApiBeforeStr
+			apiPermission.adminClassApiBeforeStr = apiPermission.keFuAdminApiBeforeStr
+			apiPermission.allRoleApiBeforeStr = apiPermission.keFuAdminApiBeforeStr
+			break
+		case 'Admin':
+			apiPermission.adminClassApiBeforeStr = apiPermission.adminApiBeforeStr
+			apiPermission.allRoleApiBeforeStr = apiPermission.adminApiBeforeStr
+			apiPermission.keFuClassApiBeforeStr = apiPermission.commonApiBeforeStr
+			break
+		default:
+			break
+	}
+}

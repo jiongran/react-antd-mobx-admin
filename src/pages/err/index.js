@@ -1,9 +1,10 @@
-import React, { useCallback } from "react";
-import { Result, Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { getDefaultMenu } from "@/utils";
+import { addOpenedMenu } from "@/store/app/action";
+import { getApp, getOpenedMenu } from "@/store/getters";
 import { filterOpenKey } from "@/store/menu/action";
-import { getOpenedMenu } from "@/store/getters";
+import { getDefaultMenu } from "@/utils";
+import { Button, Result } from "antd";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 function useErrorPage(props) {
@@ -13,6 +14,8 @@ function useErrorPage(props) {
     subTitle = "Sorry, the page you visited does not exist.",
   } = props;
   const openedMenu = useSelector(getOpenedMenu)
+  const app = useSelector(getApp)
+  console.log('app',app)
   const dispatch = useDispatch()
   const history = useHistory()
   const filterOpenKeyFn = useCallback((key) => dispatch(filterOpenKey(key)), [dispatch])
@@ -35,22 +38,37 @@ function useErrorPage(props) {
     const next = menuList[menuList.length - 1];
     history.replace(next.path);
   }, [history, openedMenu, filterOpenKeyFn])
-  return { status, errTitle, subTitle, back };
+  const update = () => {
+    console.log('update')
+    dispatch(addOpenedMenu({a2:{a3:'a3',a4:'a4'}}))
+  }
+  return { status, errTitle, subTitle, back ,app,update};
 }
 
 function ErrorPage(props) {
-  const { status, errTitle, subTitle, back } = useErrorPage(props);
+  const { status, errTitle, subTitle, back,app,update } = useErrorPage(props);
+  console.log('ErrorPage',JSON.stringify( app))
   return (
+    
     <Result
       status={status}
       title={errTitle}
       subTitle={subTitle}
       extra={
+        <>
         <Button type="primary" onClick={back}>
           Go Back
         </Button>
+            <p> {app?.a2?.a4??'asd'}</p>
+           
+            <Button type="primary" onClick={update}>
+                 修改
+                </Button>
+                
+    </>
       }
     />
+
   );
 }
 

@@ -10,14 +10,14 @@ const routes = [{
   path: "/form/index",
   components: () => import("..\\pages\\form\\index.js")
 }, {
-  path: "/icons",
-  components: () => import("..\\pages\\icons\\index.js")
-}, {
   path: "/list/card",
   components: () => import("..\\pages\\list\\card.js")
 }, {
   path: "/list/search",
   components: () => import("..\\pages\\list\\search.js")
+}, {
+  path: "/icons",
+  components: () => import("..\\pages\\icons\\index.js")
 }, {
   path: "/power/menu",
   components: () => import("..\\pages\\power\\menu.js")
@@ -33,6 +33,9 @@ const routes = [{
 }, {
   path: "/statistics/visitor",
   components: () => import("..\\pages\\statistics\\vistor.js")
+}, {
+  path: "/custorm",
+  components: () => import("..\\pages\\custorm\\index.js")
 }];
     
 

@@ -1,9 +1,11 @@
-import { createStore, combineReducers } from "redux";
+import { combineReducers, createStore } from "redux";
+import AppReducer from "./app/reducer";
+import LayoutReducer from "./layout/reducer";
 import MenuReducer from "./menu/reducer";
 import UserReducer from "./user/reducer";
-import LayoutReducer from "./layout/reducer";
 import VisibelReducer from "./visibel/reducer";
 const reducer = combineReducers({
+  app: AppReducer,
   menu: MenuReducer,
   user: UserReducer,
   layout: LayoutReducer,

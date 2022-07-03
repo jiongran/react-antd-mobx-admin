@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { BrowserRouter, HashRouter } from "react-router-dom";
-import { Spin } from "antd";
 import Layout from "@/layout";
-import Login from "@pages/login";
-import { useDispatch, useSelector } from "react-redux";
-import { setUserInfoAction } from "@/store/user/action";
 import { getStateUser } from "@/store/getters";
-import { getLocalUser } from '@/utils'
+import { setUserInfoAction } from "@/store/user/action";
+import { getLocalUser } from '@/utils';
+import Login from "@pages/login";
+import { Spin } from "antd";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 
 const Router = process.env.REACT_APP_ROUTER_ISHASH === "1" ? HashRouter : BrowserRouter
 const RouterBasename = process.env.REACT_APP_ROUTERBASE || "/"

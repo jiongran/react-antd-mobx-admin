@@ -1,4 +1,4 @@
-import { getMenus, USER_INFO, MENU, LAYOUT_MODE, COMPONENTS_VISIBEL, TOKEN } from "@/common";
+import { COMPONENTS_VISIBEL, getMenus, LAYOUT_MODE, MENU, TOKEN, USER_INFO } from "@/common";
 
 // 获取默认页面
 const getDefaultMenu = async() => {
@@ -29,7 +29,6 @@ function getSessionUser() {
 }
 
 function saveUser(info) {
-    setKey(true, USER_INFO, info);
     setKey(false, USER_INFO, info);
 }
 
@@ -39,7 +38,7 @@ function sleep(seconed) {
   });
 }
 function getLocalUser() {
-    return getKey(true, USER_INFO);
+    return getKey(false, USER_INFO);
 }
 
 function getMenuParentKey(list, key) {
@@ -146,10 +145,10 @@ function stopPropagation(e) {
 }
 
 function getLayoutMode() {
-  return getKey(true, LAYOUT_MODE);
+  return getKey(false, LAYOUT_MODE);
 }
 function setLayoutMode(data) {
-  setKey(true, LAYOUT_MODE, data);
+  setKey(false, LAYOUT_MODE, data);
 }
 
 /**
@@ -158,15 +157,38 @@ function setLayoutMode(data) {
  */
 function clearLocalDatas(keys) {
   keys.forEach((key) => {
-    rmKey(true, key);
+    rmKey(false, key);
     rmKey(false, key);
   });
 }
 function getCompVisibel() {
-  return getKey(true, COMPONENTS_VISIBEL);
+  return getKey(false, COMPONENTS_VISIBEL);
 }
 function setCompVisibel(val) {
-  return setKey(true, COMPONENTS_VISIBEL, val);
+  return setKey(false, COMPONENTS_VISIBEL, val);
+}
+function clone(obj){
+  let o ;
+  if(typeof obj === 'object'){
+    if(obj === null){
+      o = null
+    }else{
+      if(Array.isArray(obj)){
+        o = []
+        for(var i =0;i<obj.length;i++){
+          o.push(clone(obj[i]))
+        }
+      }else{
+        o = {}
+        for (let key in obj) {
+          o[key] = clone(obj[key])
+        }
+      }
+    }
+  }else{
+    o = obj
+  }
+  return o
 }
 export {
   getDefaultMenu,
@@ -189,4 +211,6 @@ export {
   clearLocalDatas,
   getCompVisibel,
   setCompVisibel,
+  clone
 };
+
