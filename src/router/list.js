@@ -1,32 +1,14 @@
-import auto from "./auto";
 import loadable from "@loadable/component";
 import { Redirect } from "react-router-dom";
+import auto from "./auto";
 const Error = loadable(() => import("@pages/err"));
 
 const defaultArr = [
   {
     [MENU_PATH]: "/",
     [MENU_KEY]: "index",
-    to: "/details/person",
+    to: "/icons",
     components: Redirect,
-  },
-  {
-    [MENU_PATH]: "/result/404",
-    components: Error,
-  },
-  {
-    [MENU_PATH]: "/result/403",
-    status: "403",
-    errTitle: "403",
-    subTitle: "Sorry, you don't have access to this page.",
-    components: Error,
-  },
-  {
-    [MENU_PATH]: "/result/500",
-    status: "500",
-    errTitle: "500",
-    subTitle: "Sorry, the server is reporting an error.",
-    components: Error,
   },
   {
     [MENU_PATH]: "*",

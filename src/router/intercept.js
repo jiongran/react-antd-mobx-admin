@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { addOpenedMenu, setOpenKey, setSelectKey, setCurrentPath } from "@/store/menu/action";
-import { useDispatch, useSelector } from "react-redux";
+import { getOpenedMenu } from "@/store/getters";
+import { addOpenedMenu, setCurrentPath, setOpenKey, setSelectKey } from "@/store/menu/action";
 import { getMenuParentKey } from "@/utils";
-import { useDidRecover } from "react-router-cache-route"
 import Error from "@pages/err";
 import { Spin } from "antd";
-import { getOpenedMenu } from "@/store/getters";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useDidRecover } from "react-router-cache-route";
+import { useHistory } from "react-router-dom";
 
 const fallback = <Spin style={{
   display: "flex",
@@ -15,7 +16,8 @@ const fallback = <Spin style={{
   fontSize: 24,
 }} tip="页面加载中...." />
 
-function Intercept({ menuList, components: Components, history, [MENU_TITLE]: title, [MENU_PATH]: pagePath, pageKey, ...itemProps }) {
+function Intercept({ menuList, components: Components, [MENU_TITLE]: title, [MENU_PATH]: path,[MENU_PARENTKEY]:parent, pageKey, ...itemProps }) {
+  const history = useHistory()
   const openMenu = useSelector(getOpenedMenu)
   const dispatch = useDispatch()
   const setPath = useCallback((path) => dispatch(setCurrentPath(path)), [dispatch])
@@ -37,18 +39,27 @@ function Intercept({ menuList, components: Components, history, [MENU_TITLE]: ti
     });
   }, [])
 
+  
   const setInfo = useCallback(() => {
     if (!title) {
       return;
     }
-    const { pathname, hash, search } = history.location
     document.title = title;
+    const { pathname, hash, search } = history.location
     const pagePath = pathname + (hash || search);
     const findInfo = openMenu.find((i) => i.path === pagePath);
+    console.log('menuList',menuList)
+    if(/:(\w+)/.test(path)){
+      console.log('parent', parent)
+      setSelectedKeys([parent])
+    }else{
+      setSelectedKeys([pageKey])
+    }
     setPath(pagePath)
-    setSelectedKeys([String(pageKey)]);
+    // setSelectedKeys([String(pageKey)]);
     let openkey = getMenuParentKey(menuList, pageKey);
     setOpenKeys(openkey);
+    console.log('')
     pushMenu(findInfo, pageKey, pagePath, title);
   }, [history, openMenu, menuList, title, pageKey, setOpenKeys, setPath, setSelectedKeys, pushMenu])
 
@@ -67,10 +78,9 @@ function Intercept({ menuList, components: Components, history, [MENU_TITLE]: ti
   useDidRecover(init, [init])
 
   const hasPath = !menuList.find(
-    (m) => (m[MENU_PARENTPATH] || "") + m[MENU_PATH] === pagePath
+    (m) => (m[MENU_PARENTPATH] || "") + m[MENU_PATH] === path
   );
-
-  if (hasPath && pagePath !== "/" && pagePath !== "*") {
+  if (hasPath && path !== "/" &&  path !== "*") {
     return (
       <Error
         {...itemProps}

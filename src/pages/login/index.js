@@ -1,8 +1,7 @@
 import req from '@/api/req'
 import { setUserInfoAction } from "@/store/user/action"
-import { saveToken } from "@/utils"
-import { api, setApi, validLength6 } from '@/utils/formValid'
-import { jsonUtils } from '@/utils/modules'
+import { saveToken, saveUser } from "@/utils"
+import { validLength6 } from '@/utils/formValid'
 import { LockOutlined, SafetyOutlined, UserOutlined, VerifiedOutlined } from '@ant-design/icons'
 import { Button, Form, Input, message } from "antd"
 import { useCallback, useEffect, useRef, useState } from "react"
@@ -42,16 +41,25 @@ function useLogin(setUserInfo, uuid) {
     const onFinish = async (values) => {
         setBtnLoad(true)
         try {
-            const result = await req("member/login", {
-                ...values,
-                uuid
-            })
-            if (result.resultCode !== 200) return
-            const { data } = result
+            // const result = await req("member/login", {
+            //     ...values,
+            //     uuid
+            // })
+            // if (result.resultCode !== 200) return
+            // const { data } = result
+            const data ={
+                oAuth:{
+                 token:'aaaaaaaaaaaaaa'   
+                },
+                user:{
+                    ...values
+                }
+            }
             setBtnLoad(false)
             saveToken(data.oAuth.token)
             message.success('登录成功')
             setUserInfo({ ...data.user, isLogin: true })
+            saveUser({ ...data.user, isLogin: true })
         } catch (e) {
             setBtnLoad(false);
         }
@@ -60,9 +68,6 @@ function useLogin(setUserInfo, uuid) {
 }
 
 function Login() {
-    console.log('before',api)
-    setApi({a1:'s',a8:'18'})
-    console.log('after',jsonUtils.stringify(api))
     const dispatch = useDispatch()
     const setUserInfo = useCallback((info) => dispatch(setUserInfoAction(info)), [dispatch])
     const [form] = Form.useForm();

@@ -15,7 +15,6 @@ function useErrorPage(props) {
   } = props;
   const openedMenu = useSelector(getOpenedMenu)
   const app = useSelector(getApp)
-  console.log('app',app)
   const dispatch = useDispatch()
   const history = useHistory()
   const filterOpenKeyFn = useCallback((key) => dispatch(filterOpenKey(key)), [dispatch])
@@ -39,7 +38,6 @@ function useErrorPage(props) {
     history.replace(next.path);
   }, [history, openedMenu, filterOpenKeyFn])
   const update = () => {
-    console.log('update')
     dispatch(addOpenedMenu({a2:{a3:'a3',a4:'a4'}}))
   }
   return { status, errTitle, subTitle, back ,app,update};
@@ -47,7 +45,6 @@ function useErrorPage(props) {
 
 function ErrorPage(props) {
   const { status, errTitle, subTitle, back,app,update } = useErrorPage(props);
-  console.log('ErrorPage',JSON.stringify( app))
   return (
     
     <Result

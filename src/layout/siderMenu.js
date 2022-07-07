@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { Layout, Menu, Button, Affix, Col } from "antd";
 import MyIcon from "@/components/icon";
 import { setOpenKey } from "@/store/action";
-import { stopPropagation } from "@/utils";
-import * as layoutTypes from "@/store/layout/actionTypes";
 import { getLayoutMode, getMenuList, getOpenMenuKey, getSelectMenuKey } from "@/store/getters";
+import * as layoutTypes from "@/store/layout/actionTypes";
+import { stopPropagation } from "@/utils";
+import { Affix, Button, Col, Layout, Menu } from "antd";
+import { useCallback, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -43,7 +43,7 @@ const renderMenu = (item, path = "") => {
   if (item[MENU_SHOW] === false) {
     return null;
   }
-  if (!item[MENU_CHILDREN]) {
+  if(!item.children||(item.children.filter(item => item[MENU_SHOW]!==false).length===0)){
     return (
       <Menu.Item key={String(item[MENU_KEY])} icon={<MyIcon type={item[MENU_ICON]} />}>
         <Link to={(path || "") + item[MENU_PATH]}>{item[MENU_TITLE]}</Link>
